@@ -18,5 +18,8 @@ channel:[['顾问诊断与沟通准备','用脱敏样本准备一次专业沟通
 device:[['终端中的专业金融问答','在新入口衔接专业的金融服务',['xiaogu','mcp','agent'],'c-qianwen','专业问答与基金解读'],['围绕目标组织服务','从资金用途识别服务需求',['xiaogu','skills','agent'],'c-planning','目标梳理与规划讨论'],['金融助手集成','把能力与运行底座接进新终端',['mcp','skills','agent'],'c-agent','终端金融助手工作流']],
 investor:[['看懂基金与账户','先理解问题与现有账户信息',['xiaogu','mcp','skills'],'c-qianwen','基金解读与账户分析'],['梳理家庭资金目标','按用途和期限讨论资金安排',['xiaogu','skills','mcp'],'c-planning','家庭目标与规划材料'],['阅读专业投教内容','用清晰的内容理解投资问题',['editor','xiaogu','skills'],'c-editor','专业投教与陪伴内容']]
 };
-window.FusionModel={shortNames,groups,tasksFor(id){const group=groups.find(g=>g.ids.includes(id));return audienceTasks[id]||commonTasks[group?.id||'ai']},groupFor(id){return groups.find(g=>g.ids.includes(id))||groups[0]}};
+for(const p of window.CONTENT?.products||[])shortNames[p.id]=p.shortName||shortNames[p.id]||p.name;
+function blueprintLayer(p){if(['foundation','production','service'].includes(p.blueprintLayer))return p.blueprintLayer;if(['mcp','skills','benchmark'].includes(p.id))return 'foundation';if(['xiaogu','huiketong','tamp','agent'].includes(p.id)||/个人|顾问|业务服务/.test(p.category||''))return 'service';return 'production'}
+function blueprintGroups(){const output={foundation:[],production:[],service:[]};for(const p of window.CONTENT?.products||[])output[blueprintLayer(p)].push(p.id);return output}
+window.FusionModel={shortNames,groups,blueprintLayer,blueprintGroups,tasksFor(id){const group=groups.find(g=>g.ids.includes(id));return audienceTasks[id]||commonTasks[group?.id||'ai']},groupFor(id){return groups.find(g=>g.ids.includes(id))||groups[0]}};
 })();
